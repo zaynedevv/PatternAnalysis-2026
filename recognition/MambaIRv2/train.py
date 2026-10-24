@@ -101,3 +101,43 @@ class Colorizer(nn.Module):
 
 model = Colorizer(args.ckpt, args.crop).to(device)
 model = DDP(model, device_ids=[local_rank])
+
+
+perceptual = None
+if args.lam > 0:
+    perceptual = lpips.LPIPS(net='alex').to(device).eval()
+    for p in perceptual.parameters():
+        p.requires_grad_(False)
+
+optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.iters)
+
+
+# ---------- loss ----------
+def compute_loss(L, ab_true, rgb_true):
+    ab_pred = model(L)
+    loss_l1 = F.l1_loss(ab_pred, ab_true)
+    loss_lp = torch.tensor(0.0, device=device)
+    if perceptual is not None:
+        rgb_pred = lab_to_rgb(L.float(), ab_pred.float())
+        loss_lp = perceptual(rgb_pred * 2 - 1, rgb_true * 2 - 1).mean()
+    return loss_l1 + args.lam * loss_lp, loss_l1.item(), loss_lp.item()
+
+
+# ---------- validation ----------
+@torch.no_grad()
+def validate(step):
+    model.eval()
+    l1_vals, lp_vals = [], []
+    for L, ab_true, rgb_true in val_loader:
+        L, ab_true, rgb_true = L.to(device), ab_true.to(device), rgb_true.to(device)
+        with torch.autocast('cuda', dtype=torch.bfloat16):
+            ab_pred = model(L)
+        l1_vals.append(F.l1_loss(ab_pred.float(), ab_true).item())
+        if perceptual is not None:
+            rgb_pred = lab_to_rgb(L, ab_pred.float())
+            lp_vals.append(perceptual(rgb_pred * 2 - 1, rgb_true * 2 - 1).mean().item())
+    if is_main:
+        lp = np.mean(lp_vals) if lp_vals else 0.0
+        print(f'VAL step {step}  l1 {np.mean(l1_vals):.4f}  lpips {lp:.4f}', flush=True)
+    model.train()
