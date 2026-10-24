@@ -6,7 +6,7 @@ import numpy as np, lpips
 from PIL import Image
 from skimage.color import rgb2lab
 from lab_utils import to_model, lab_to_rgb_torch
-from analysis.model_zoo.mambairv2 import MambaIRv2
+from model import Colorizer
 
 # ---------- args ----------
 parser = argparse.ArgumentParser()
@@ -77,28 +77,6 @@ val_loader = DataLoader(val_ds, args.batch, num_workers=2)
 
 
 # ---------- model ----------
-class Colorizer(nn.Module):
-    def __init__(self, ckpt_path, crop):
-        super().__init__()
-        self.body = MambaIRv2(
-            img_size=crop, in_chans=3, embed_dim=174, d_state=16, depths=(6,)*6,
-            num_heads=[6]*6, window_size=16, inner_rank=64, num_tokens=128,
-            convffn_kernel_size=5, mlp_ratio=2., upscale=1, img_range=1.,
-            upsampler='', resi_connection='1conv')
-        state = torch.load(ckpt_path, map_location='cpu')['params']
-        print(self.body.load_state_dict(state, strict=True))
-
-        self.head = nn.Conv2d(174, 2, kernel_size=3, padding=1)
-        nn.init.zeros_(self.head.weight)
-        nn.init.zeros_(self.head.bias)
-
-    def forward(self, L):
-        x = L.repeat(1, 3, 1, 1)                      # grey -> 3 channels for pretrained conv
-        feat = self.body.conv_first(x)
-        feat = self.body.conv_after_body(self.body.forward_features(feat)) + feat
-        return self.head(feat)                        # predicted ab
-
-
 model = Colorizer(args.ckpt, args.crop).to(device)
 model = DDP(model, device_ids=[local_rank])
 
