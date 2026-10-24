@@ -141,3 +141,46 @@ def validate(step):
         lp = np.mean(lp_vals) if lp_vals else 0.0
         print(f'VAL step {step}  l1 {np.mean(l1_vals):.4f}  lpips {lp:.4f}', flush=True)
     model.train()
+
+
+# ---------- training loop ----------
+os.makedirs(args.out, exist_ok=True)
+step = 0
+start_time = time.time()
+images_seen = 0
+model.train()
+
+while step < args.iters:
+    sampler.set_epoch(step)
+    for L, ab_true, rgb_true in train_loader:
+        L, ab_true, rgb_true = L.to(device), ab_true.to(device), rgb_true.to(device)
+
+        with torch.autocast('cuda', dtype=torch.bfloat16):
+            loss, l1, lp = compute_loss(L, ab_true, rgb_true)
+
+        optimizer.zero_grad(set_to_none=True)
+        loss.backward()
+        optimizer.step()
+        scheduler.step()
+
+        step += 1
+        images_seen += L.shape[0]
+
+        if step == 20:   # reset after warmup so numbers are honest
+            torch.cuda.reset_peak_memory_stats()
+            start_time, images_seen = time.time(), 0
+
+        if is_main and step % 50 == 0:
+            throughput = images_seen / (time.time() - start_time)
+            peak_gb = torch.cuda.max_memory_allocated() / 1e9
+            print(f'step {step}  l1 {l1:.4f}  lpips {lp:.4f}  {throughput:.1f} img/s  peak {peak_gb:.2f} GB', flush=True)
+
+        if step % 500 == 0 or step == args.iters:
+            validate(step)
+            if is_main:
+                torch.save(model.module.state_dict(), f'{args.out}/ckpt_{step}.pt')
+
+        if step >= args.iters:
+            break
+
+dist.destroy_process_group()
