@@ -31,3 +31,35 @@ is_main = dist.get_rank() == 0
 torch.manual_seed(args.seed)
 np.random.seed(args.seed)
 
+
+#---------- data --------------
+class LabDataset(Dataset):
+    def __init__(self, files, crop, random_crop):
+        self.files = files
+        self.crop = crop
+        self.random_crop = random_crop
+
+    def __len__(self):
+        return len(self.files)
+
+    def __getitem__(self, i):
+        img = Image.open(self.files[i]).convert('RGB')
+        img = np.asarray(img, dtype=np.float32) / 255.0
+        H, W, _ = img.shape
+        c = self.crop
+
+        if self.random_crop:
+            y = np.random.randint(0, H - c + 1)
+            x = np.random.randint(0, W - c + 1)
+        else:
+            y, x = (H - c) // 2, (W - c) // 2
+        img = img[y:y+c, x:x+c]
+
+        if self.random_crop and np.random.rand() < 0.5:
+            img = img[:, ::-1]
+        img = np.ascontiguousarray(img)
+
+        L, ab = normalize(rgb2lab(img))
+
+        to_tensor = lambda arr: torch.from_numpy(arr).permute(2, 0, 1)
+        return to_tensor(L), to_tensor(ab), to_tensor(img)
