@@ -36,6 +36,36 @@ Data audit: the test set is Kodak24, 24 lossless 768×512 RGB PNGs, a standard c
 
 Plausibility will be shown to the PM through colourfulness and ab-histogram match, the bleed score, a blind real-versus-colourised test (5–10 raters, 50 pairs), and an autopsy of 3–5 failure cases.
 
+│ Degradation  │      Method      │ PSNR  │ SSIM  │ LPIPS-alex  │ ΔE00  │
+│              │                  │   ↑   │   ↑   │      ↓      │   ↓   │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│ Noise σ=15   │ Degraded input   │ 24.73 │ 0.574 │ 0.239       │ 10.40 │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│              │ ColorDN          │ 34.86 │ 0.933 │ 0.053       │ 1.80  │
+│              │ (pretrained)     │       │       │             │       │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│ Colour cast  │ Degraded input   │ 24.81 │ 0.983 │ 0.090       │ 11.76 │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│              │ Gray-world       │ 21.32 │ 0.914 │ 0.087       │ 12.21 │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│              │ SR ×4 (notebook) │ 18.34 │ 0.582 │ 0.437       │ 14.25 │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│              │ ColorDN          │ 24.26 │ 0.911 │ 0.178       │ 11.94 │
+│              │ (pretrained)     │       │       │             │       │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│ Desaturation │ Degraded input   │ 24.85 │ 0.963 │ 0.119       │ 8.28  │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│              │ ColorDN          │ 24.37 │ 0.895 │ 0.213       │ 8.58  │
+│              │ (pretrained)     │       │       │             │       │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│ Fade         │ Degraded input   │ 22.77 │ 0.927 │ 0.112       │ 9.02  │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│              │ Gray-world       │ 20.14 │ 0.906 │ 0.107       │ 12.08 │
+├──────────────┼──────────────────┼───────┼───────┼─────────────┼───────┤
+│              │ ColorDN          │ 22.31 │ 0.822 │ 0.240       │ 9.31  │
+│              │ (pretrained)     │       │       │             │       │
+└──────────────┴──────────────────┴───────┴───────┴─────────────┴───────┘
+
 ## 4. Risks, budget and fallback
 
 Main risks: mamba\_ssm kernels failing to build (lowered: they built in the course notebook; fallback causal\_conv1d 1.5.2, mamba\_ssm 2.2.5); desaturation (LPIPS term); out-of-memory, as the authors trained at batch 2 per GPU (bf16, gradient checkpointing, smaller batch); hallucinated skin or organ colour (human review, "synthetic colour" label, never for diagnosis or evidence).
