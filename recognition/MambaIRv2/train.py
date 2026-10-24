@@ -20,3 +20,14 @@ parser.add_argument('--seed', type=int, default=0)
 parser.add_argument('--lam', type=float, default=0.0)   # LPIPS weight
 parser.add_argument('--lr', type=float, default=1e-4)
 args = parser.parse_args()
+
+
+# ---------- distributed ----------
+dist.init_process_group('nccl')
+local_rank = int(os.environ['LOCAL_RANK'])
+torch.cuda.set_device(local_rank)
+device = torch.device('cuda', local_rank)
+is_main = dist.get_rank() == 0
+torch.manual_seed(args.seed)
+np.random.seed(args.seed)
+
