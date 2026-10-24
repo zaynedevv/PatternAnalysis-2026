@@ -63,3 +63,41 @@ class LabDataset(Dataset):
 
         to_tensor = lambda arr: torch.from_numpy(arr).permute(2, 0, 1)
         return to_tensor(L), to_tensor(ab), to_tensor(img)
+
+
+files = sorted(os.path.join(args.data, f) for f in os.listdir(args.data))
+train_files, val_files = files[:-80], files[-80:]
+
+train_ds = LabDataset(train_files, args.crop, random_crop=True)
+val_ds = LabDataset(val_files, args.crop, random_crop=False)
+
+sampler = DistributedSampler(train_ds, seed=args.seed)
+train_loader = DataLoader(train_ds, args.batch, sampler=sampler, num_workers=4, pin_memory=True, drop_last=True)
+val_loader = DataLoader(val_ds, args.batch, num_workers=2)
+
+
+# ---------- model ----------
+class Colorizer(nn.Module):
+    def __init__(self, ckpt_path, crop):
+        super().__init__()
+        self.body = MambaIRv2(
+            img_size=crop, in_chans=3, embed_dim=174, d_state=16, depths=(6,)*6,
+            num_heads=[6]*6, window_size=16, inner_rank=64, num_tokens=128,
+            convffn_kernel_size=5, mlp_ratio=2., upscale=1, img_range=1.,
+            upsampler='', resi_connection='1conv')
+        state = torch.load(ckpt_path, map_location='cpu')['params']
+        print(self.body.load_state_dict(state, strict=True))
+
+        self.head = nn.Conv2d(174, 2, kernel_size=3, padding=1)
+        nn.init.zeros_(self.head.weight)
+        nn.init.zeros_(self.head.bias)
+
+    def forward(self, L):
+        x = L.repeat(1, 3, 1, 1)                      # grey -> 3 channels for pretrained conv
+        feat = self.body.conv_first(x)
+        feat = self.body.conv_after_body(self.body.forward_features(feat)) + feat
+        return self.head(feat)                        # predicted ab
+
+
+model = Colorizer(args.ckpt, args.crop).to(device)
+model = DDP(model, device_ids=[local_rank])
