@@ -21,7 +21,12 @@ class Colorizer(nn.Module):
         nn.init.zeros_(self.head.bias)
 
     def forward(self, L):
+        H, W = L.shape[-2:]
+        assert H % self.body.window_size == 0 and W % self.body.window_size == 0, 'crop must be a multiple of window_size'
+        params = {'attn_mask': self.body.calculate_mask([H, W]).to(L.device),   # as in MambaIRv2.forward
+                  'rpi_sa': self.body.relative_position_index_SA}
+
         x = L.repeat(1, 3, 1, 1)                      # grey -> 3 channels for pretrained conv
         feat = self.body.conv_first(x)
-        feat = self.body.conv_after_body(self.body.forward_features(feat)) + feat
+        feat = self.body.conv_after_body(self.body.forward_features(feat, params)) + feat
         return self.head(feat)                        # predicted ab
