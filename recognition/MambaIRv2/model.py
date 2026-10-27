@@ -33,15 +33,17 @@ class Colorizer(nn.Module):
         return self.head(feat)                        # predicted ab
 
     def forward_features(self, x, params):
-        """MambaIRv2.forward_features with gradient checkpointing per residual group
-        (its use_checkpoint flag is accepted but never used). batch 8 @ 128² OOMs on 22 GB without it."""
+        """MambaIRv2.forward_features with gradient checkpointing per block (its use_checkpoint
+        flag is accepted but never used). Each block keeps ~3.5 GB of attention/scan activations
+        at batch 8 @ 128², so even one 6-block group doesn't fit in 22 GB without this."""
         body = self.body
+        ckpt = self.training and torch.is_grad_enabled()
         x_size = (x.shape[2], x.shape[3])
         x = body.patch_embed(x)
-        for layer in body.layers:
-            if self.training and torch.is_grad_enabled():
-                x = checkpoint(layer, x, x_size, params, use_reentrant=False)
-            else:
-                x = layer(x, x_size, params)
+        for group in body.layers:                     # ASSB.forward, unrolled per block
+            res = x
+            for blk in group.residual_group.layers:
+                x = checkpoint(blk, x, x_size, params, use_reentrant=False) if ckpt else blk(x, x_size, params)
+            x = group.patch_embed(group.conv(group.patch_unembed(x, x_size))) + res
         x = body.norm(x)
         return body.patch_unembed(x, x_size)
