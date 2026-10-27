@@ -1,4 +1,5 @@
 import torch, torch.nn as nn
+from torch.utils.checkpoint import checkpoint
 from analysis.model_zoo.mambairv2 import MambaIRv2
 
 
@@ -28,5 +29,19 @@ class Colorizer(nn.Module):
 
         x = L.repeat(1, 3, 1, 1)                      # grey -> 3 channels for pretrained conv
         feat = self.body.conv_first(x)
-        feat = self.body.conv_after_body(self.body.forward_features(feat, params)) + feat
+        feat = self.body.conv_after_body(self.forward_features(feat, params)) + feat
         return self.head(feat)                        # predicted ab
+
+    def forward_features(self, x, params):
+        """MambaIRv2.forward_features with gradient checkpointing per residual group
+        (its use_checkpoint flag is accepted but never used). batch 8 @ 128² OOMs on 22 GB without it."""
+        body = self.body
+        x_size = (x.shape[2], x.shape[3])
+        x = body.patch_embed(x)
+        for layer in body.layers:
+            if self.training and torch.is_grad_enabled():
+                x = checkpoint(layer, x, x_size, params, use_reentrant=False)
+            else:
+                x = layer(x, x_size, params)
+        x = body.norm(x)
+        return body.patch_unembed(x, x_size)
