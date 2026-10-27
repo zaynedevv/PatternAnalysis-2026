@@ -24,6 +24,7 @@ parser.add_argument('--test_data', default='data/kodak24')
 parser.add_argument('--train_data', default='data/DIV2K_train_HR')   # meanmap only
 parser.add_argument('--out', required=True)
 parser.add_argument('--crop', type=int, default=256)
+parser.add_argument('--ab_scale', type=float, default=1.0)   # post-hoc saturation boost; pick on val, not Kodak
 args = parser.parse_args()
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -105,7 +106,7 @@ for path in test_files:
     L_np, ab_gt = normalize(rgb2lab(rgb_gt))
 
     L = to_tensor(L_np)
-    ab_pred = predict_ab(L)
+    ab_pred = (predict_ab(L) * args.ab_scale).clamp(-1, 1)
     rgb_pred = to_numpy(lab_to_rgb(L, ab_pred))
     ab_pred_np = to_numpy(ab_pred)
 
@@ -131,7 +132,7 @@ with open(f'{args.out}/metrics.csv', 'w', newline='') as f:
     w = csv.DictWriter(f, fieldnames=rows[0].keys())
     w.writeheader(); w.writerows(rows)
 
-print(f'\n{args.method}  ({len(rows)} images)')
+print(f'\n{args.method}  ab_scale {args.ab_scale}  ({len(rows)} images)')
 for k in rows[0]:
     if k != 'image':
         print(f'  {k:20s} {np.mean([r[k] for r in rows]):.4f}')
