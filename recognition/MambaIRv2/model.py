@@ -16,6 +16,7 @@ class Colorizer(nn.Module):
         if ckpt_path is not None:
             state = torch.load(ckpt_path, map_location='cpu')['params']
             print(self.body.load_state_dict(state, strict=True))
+        self.body.conv_last.requires_grad_(False)     # bypassed by the ab head; DDP errors on params with no grad
 
         self.head = nn.Conv2d(174, 2, kernel_size=3, padding=1)
         nn.init.zeros_(self.head.weight)
