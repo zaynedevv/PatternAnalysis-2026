@@ -5,7 +5,7 @@
 **Author:** Zayne Steele Grant (s4803041)
 
 ![Greyscale input, baseline, fine-tuned and ground truth on Kodak24](figures/comparison.png)
-_Kodak24 centre crops (256×256). Columns: greyscale input, per-brightness mean-colour baseline, fine-tuned MambaIRv2 (λ = 0.1), the same model with chroma ×2, and ground truth. LPIPS is shown under each prediction (lower is better)._
+_Kodak24 centre crops (256×256). From left: greyscale input, mean-colour baseline, fine-tuned MambaIRv2 (λ = 0.1), the same model with colour ×2, and ground truth. LPIPS is under each prediction (lower is better)._
 
 ## Contents
 
@@ -22,11 +22,11 @@ _Kodak24 centre crops (256×256). Columns: greyscale input, per-brightness mean-
 
 ## 1. Problem and algorithm
 
-**The problem.** Colourisation means guessing a photo's colour from its brightness alone, and there often isn't one right answer: a grey shirt could have been red, green or blue. A network trained with a plain pixel loss like L1 plays it safe and predicts the average colour, usually a dull brown, or confidently paints things the wrong colour. The question was whether MambaIRv2, a state-space network that sees the whole image at once, can produce vivid colours that stay inside object boundaries, and how to show a project manager that an output is _plausible_ when the real colour can't be known.
+**The problem.** Colourisation means guessing a photo's colour from its brightness alone, and there is often no single right answer, since a grey shirt could have been red, green or blue. A network trained with a pixel loss such as L1 plays it safe by predicting the average colour, which is usually a dull brown, or it confidently paints things the wrong colour. This project tests whether MambaIRv2, a state-space network that sees the whole image at once, can produce vivid colour that stays inside object boundaries, and how to show a project manager that an output is _plausible_ when the true colour is unknown.
 
-**How it works.** I convert each image to CIELAB, which splits it into lightness `L` and two colour channels `ab`. The network sees only `L` and predicts only `ab`, and the output keeps the original `L`, so image structure can't get worse and the model only learns colour.
+**How it works.** Each image is converted to CIELAB, which separates lightness `L` from the two colour channels `ab`. The network sees only `L` and predicts only `ab`, and the output keeps the original `L`, so the image structure is untouched and the model only has to learn colour.
 
-I fine-tune the official MambaIRv2 colour-denoising checkpoint (`mambairv2_ColorDN_15.pth`, about 22.7 M parameters). `L` is repeated to three channels so the pretrained first layer still works, and the RGB output layer is replaced by a new zero-initialised 3×3 convolution (174 features to 2 channels), so training starts from a plain greyscale output. The loss is `L1(ab) + λ · LPIPS(RGB)`, where LPIPS is a perceptual distance that punishes dull output more than L1; it is computed through a differentiable `lab_to_rgb` in [modules.py](modules.py). At inference, an optional scale `s` (`--ab_scale`) boosts the predicted colour, and I chose it on validation, never on the test set.
+I fine-tune the official MambaIRv2 colour-denoising checkpoint (`mambairv2_ColorDN_15.pth`, about 22.7 M parameters). `L` is repeated to three channels so the pretrained first layer still works, and the RGB output layer is replaced by a new zero-initialised 3×3 convolution (174 features to 2 channels), so training starts from a plain greyscale output. The loss is `L1(ab) + λ · LPIPS(RGB)`. LPIPS is a perceptual distance that penalises dull output more than L1, and it is computed through a differentiable `lab_to_rgb` in [modules.py](modules.py). At inference, an optional scale `s` (`--ab_scale`) boosts the predicted colour. It was chosen on validation, never on the test set.
 
 ```mermaid
 flowchart LR
@@ -108,9 +108,9 @@ The pretrained model removes noise very well but does not create colour, which m
 
 ## 3. Dependencies
 
-I ran everything on an NVIDIA A10G (24 GB) with Python 3.12, torch 2.8.0 (CUDA 12.6) and torchvision 0.23.0. The model needs mamba_ssm 2.3.2.post1 and causal_conv1d (both built with `--no-build-isolation`) plus the [csguoh/MambaIR](https://github.com/csguoh/MambaIR) repository, which also pulls in einops, timm, opencv-python, pyyaml and scipy. The scripts here also use lpips, scikit-image, numpy, pillow and matplotlib.
+Everything ran on an NVIDIA A10G (24 GB) with Python 3.12, torch 2.8.0 (CUDA 12.6) and torchvision 0.23.0. The model also needs mamba_ssm 2.3.2.post1 and causal_conv1d (both built with `--no-build-isolation`) and the [csguoh/MambaIR](https://github.com/csguoh/MambaIR) repository, which in turn needs einops, timm, opencv-python, pyyaml and scipy. The scripts use lpips, scikit-image, numpy, pillow and matplotlib.
 
-**Reproducibility.** Every run uses `--seed 0` and the same fixed split (Section 5). bf16 and the mamba_ssm kernels aren't bitwise deterministic, but evaluating the same checkpoint twice gave LPIPS within 0.0001. The experiments were run before I refactored the code into the course layout; the refactor didn't change the loss, the data pipeline or the metrics. The logs and CSVs behind Sections 6 and 7 are in [outputs/](outputs/).
+**Reproducibility.** Every run uses `--seed 0` and the same fixed split. bf16 and the mamba_ssm kernels are not bitwise deterministic, but two evaluations of the same checkpoint agreed to within 0.0001 LPIPS. The experiments ran before the code was refactored into the course layout, and re-running the refactored code reproduced the same results. Logs and metric CSVs for Sections 6 and 7 are in [outputs/](outputs/).
 
 ## 4. Usage
 
@@ -124,7 +124,7 @@ The scripts run inside a clone of the official MambaIR repository.
 | [predict.py](predict.py) | Runs a trained model or baseline on the test set and reports metrics |
 | [bench.py](bench.py) | Training speed, memory and CUDA profile |
 | [test_pipeline.py](test_pipeline.py) | CPU sanity tests |
-| [figures.py](figures.py) | Rebuilds the README figures from `outputs/` |
+| [figures.py](figures.py) | Rebuilds the README figures from the `predict.py` and training outputs |
 
 **Setup (GPU machine):**
 
@@ -144,7 +144,7 @@ wget http://data.vision.ee.ethz.ch/cvl/DIV2K/DIV2K_train_HR.zip && unzip DIV2K_t
 mkdir -p data/div2k_val && ls $PWD/data/DIV2K_train_HR/*.png | tail -80 | xargs -I{} ln -sf {} data/div2k_val/
 ```
 
-**Train** (one run per λ; `--nproc_per_node` sets the number of GPUs):
+**Train** (one run per λ, `--nproc_per_node` sets the number of GPUs):
 
 ```bash
 for lam in 0 0.1 0.5 1.0; do
@@ -163,8 +163,12 @@ for lam in 0 0.1 0.5 1.0; do for s in 1.0 1.5 2.0 2.5; do
       --test_data data/div2k_val --ab_scale $s --out val/lam${lam}_s$s
 done; done
 
+for lam in 0 0.1 0.5 1.0; do
+  python predict.py --method finetuned --ckpt runs/lam$lam/ckpt_1500.pt --out results/lam$lam
+done
 python predict.py --method frozen  --out results/frozen
 python predict.py --method meanmap --out results/meanmap
+python predict.py --method meanmap --ab_scale 2.0 --out results/meanmap_s2.0
 python predict.py --method finetuned --ckpt runs/lam0.1/ckpt_1500.pt --ab_scale 2.0 --out results/final_lam0.1_s2.0
 ```
 
@@ -173,7 +177,7 @@ python predict.py --method finetuned --ckpt runs/lam0.1/ckpt_1500.pt --ab_scale 
 ```bash
 python bench.py --profile                                  # s/step, img/s, peak GB, top CUDA kernels
 python test_pipeline.py data/DIV2K_train_HR                # CPU only, no mamba_ssm needed
-python figures.py                                          # CPU only, rebuilds figures/
+python figures.py --results results --val val --runs runs # CPU only, rebuilds figures/ after the runs above
 ```
 
 ## 5. Data, pre-processing and splits
@@ -203,7 +207,7 @@ Preprocessing was implemented in [dataset.py](dataset.py), and undergoes the fol
 
 6. **Back to RGB:** To compute LPIPS and save images, predicted Lab is converted back with a differentiable torch `lab_to_rgb` (sRGB, D65), which matches `skimage.color.lab2rgb` to 2.5e-4 (checked in [test_pipeline.py](test_pipeline.py)).
 
-**Why these splits.** DIV2K is high-resolution and varied, so a held-out 10% gives a validation set that matches the training data; I used it for every tuning decision. Kodak24, chosen in the [feasibility review](#2-feasibility-review), is deliberately different (1990s film scans with more colourful subjects) and was scored only once, after every choice was fixed. More data wasn't needed: 12,000 random crops (about 16.7 passes over 720 images) rarely repeat a patch, training L1 ended only 9–13% below validation, and validation loss never meaningfully rose, so the model didn't overfit.
+**Why these splits.** DIV2K is high-resolution and varied, so holding out 10% gives a validation set that matches the training data, and it was used for every tuning decision. Kodak24, chosen in the [feasibility review](#2-feasibility-review), is deliberately different (1990s film scans with more colourful subjects) and was scored only once, after every choice was fixed. More data was not needed. The 12,000 random crops (about 16.7 passes over 720 images) rarely repeat a patch, training L1 ended only 9–13% below validation, and validation loss never meaningfully rose, so the model did not overfit.
 
 ## 6. Results
 
@@ -232,13 +236,13 @@ Colourfulness (Hasler–Süsstrunk) and bleed (colour gradient on the strongest 
 | 2   | Colourfulness within ±25% of GT | 0.64 on Kodak (0.84 on validation)                             | ✗ (passes on validation) |
 | 3   | Luminance SSIM ≥ 0.98           | 1.000 (by construction)                                        | ✓                        |
 | 4   | Bleed ≤ 1.2 × GT                | 0.73 (meanmap ×2 reaches 1.51)                                 | ✓, with the caveat below |
-| 5   | VRAM ≤ 15 GB; ≤ 8 GPU-hours     | 9.1 GB; about 14 GPU-hours for the 4-run sweep (3.4 h per run) | ✓ / ✗                    |
+| 5   | VRAM ≤ 15 GB, ≤ 8 GPU-hours     | 9.1 GB, but about 14 GPU-hours for the 4-run sweep (3.4 h per run) | ✓ / ✗                    |
 
 ### 6.2 Training curves and the saturation trade-off
 
 ![Validation L1 per λ, and LPIPS against colourfulness as the chroma scale grows](figures/curves.png)
 
-The left plot shows validation L1 during training. The right plot shows LPIPS against colourfulness as the colour scale `s` rises from 1 to 2.5; the green band is the target and black markers are Kodak results.
+The left plot shows validation L1 during training. The right plot shows LPIPS against colourfulness as the colour scale `s` rises from 1 to 2.5. The green band is the target and the black markers are Kodak results.
 
 Every run starts from grey and ends with validation L1 9–11% lower, so the model genuinely learns colour. Three curves are still falling slowly at step 1,500 and λ = 1.0 levelled off, so longer training would help only a little.
 
@@ -252,7 +256,7 @@ Measured with [bench.py](bench.py) and the training logs on an NVIDIA A10G (24 G
 
 | Quantity                                                       | Value                                                                                                       |
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Parameters                                                     | 22.66 M total. 22,656,404 trainable (body plus a 3,134-parameter head); the bypassed `conv_last` is frozen. |
+| Parameters                                                     | 22.66 M, of which 22,656,404 are trainable (including the 3,134-parameter head) |
 | Peak VRAM, training (batch 8, 128², per-block checkpointing)   | 9.1 GB                                                                                                      |
 | Peak VRAM without checkpointing / with per-group checkpointing | OOM (> 20.4 GB) / OOM (20.6 GB)                                                                             |
 | Training throughput                                            | 1.0 img/s (8.24 s per step)                                                                                 |
@@ -278,7 +282,7 @@ Training is slow because the time goes into thousands of small memory-bound oper
 
 **Short version.** The model gives believable but cautious colour that stays inside edges better than the baseline, but it misses the vividness target and sometimes invents colour. **I'd use it as a labelled viewing aid with human review, never where the colour itself is the information.**
 
-**Showing plausibility.** No single number proves it, so I'd combine four checks: the overall colourfulness should match real photos (mine reaches 0.64–0.84 of the ground truth); colour should change only at edges (my bleed is under 1.0×, against 1.5× for the boosted baseline); LPIPS is useful for comparing methods but penalises plausible colours that differ from the original; and a blind human real-vs-colourised test, planned but not run, should come before deployment.
+**Showing plausibility.** No single number proves plausibility, so I would combine four checks. The overall colourfulness should match real photos, and mine reaches 0.64–0.84 of the ground truth. Colour should change only at edges, and my bleed is under 1.0× against 1.5× for the boosted baseline. LPIPS is useful for comparing methods, but it also penalises plausible colours that differ from the original. Finally, a blind test where people pick real from colourised photos was planned but not run, and it should come before deployment.
 
 **Trade-off summary:**
 
@@ -288,7 +292,7 @@ Training is slow because the time goes into thousands of small memory-bound oper
 | Fine-tuned, `s` = 1 (λ = 0.5–1.0) | **LPIPS 0.181**    | 0.39–0.41× | Very safe, but dull                | 9.1 GB, about 3.4 GPU-hours |
 | Fine-tuned, `s` = 2 (chosen)      | LPIPS 0.200        | **0.64×**  | Visible hallucinations (kodim17)   | Same                        |
 
-Use `s` = 1 for archives or evidence and `s` ≈ 2 for presentation; it's an inference flag, so no retraining is needed. The model suits natural scenes like sky, water and vegetation, but not objects that could be any colour, medical or forensic use, or unreviewed photos of people. With more budget, I'd train on larger crops so whole objects are visible, use a loss that doesn't reward averaging (such as Zhang et al., 2016), add more colourful data, and speed up training with fused kernels or `torch.compile`.
+Use `s` = 1 for archives or evidence and `s` ≈ 2 for presentation. It is only an inference flag, so no retraining is needed. The model suits natural scenes like sky, water and vegetation, but not objects that could be any colour, medical or forensic use, or unreviewed photos of people. With more budget, I'd train on larger crops so whole objects are visible, use a loss that doesn't reward averaging (such as Zhang et al., 2016), add more colourful data, and speed up training with fused kernels or `torch.compile`.
 
 ## 9. AI usage disclosure
 
