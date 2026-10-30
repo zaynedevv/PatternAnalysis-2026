@@ -1,0 +1,9 @@
+__pycache__/
+test_out/
+/runs/
+/results/
+.DS_Store
+# outputs/: keep logs, metrics CSVs and summaries; skip images and copies of the code
+outputs/**/*.png
+outputs/*.py
+outputs/requirements.txt

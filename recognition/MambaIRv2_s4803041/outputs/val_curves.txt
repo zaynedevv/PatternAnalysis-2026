@@ -1,0 +1,16 @@
+runs/lam0.1.log:VAL step 0  l1 0.0854  lpips 0.2241
+runs/lam0.1.log:VAL step 500  l1 0.0786  lpips 0.1748
+runs/lam0.1.log:VAL step 1000  l1 0.0765  lpips 0.1674
+runs/lam0.1.log:VAL step 1500  l1 0.0757  lpips 0.1661
+runs/lam0.5.log:VAL step 0  l1 0.0854  lpips 0.2241
+runs/lam0.5.log:VAL step 500  l1 0.0797  lpips 0.1719
+runs/lam0.5.log:VAL step 1000  l1 0.0776  lpips 0.1656
+runs/lam0.5.log:VAL step 1500  l1 0.0770  lpips 0.1633
+runs/lam0.log:VAL step 0  l1 0.0854  lpips 0.0000
+runs/lam0.log:VAL step 500  l1 0.0809  lpips 0.0000
+runs/lam0.log:VAL step 1000  l1 0.0785  lpips 0.0000
+runs/lam0.log:VAL step 1500  l1 0.0764  lpips 0.0000
+runs/lam1.0.log:VAL step 0  l1 0.0854  lpips 0.2241
+runs/lam1.0.log:VAL step 500  l1 0.0795  lpips 0.1717
+runs/lam1.0.log:VAL step 1000  l1 0.0772  lpips 0.1641
+runs/lam1.0.log:VAL step 1500  l1 0.0774  lpips 0.1635

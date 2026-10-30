@@ -1,0 +1,36 @@
+bench.py on AWS g5.xlarge (NVIDIA A10G, 22 GiB), torch 2.8.0+cu126, mamba_ssm 2.3.2.post1
+batch 8, 128x128 crops, bf16 autocast, gradient checkpointing per block (36 blocks), AdamW
+
+python bench.py                    8.24 s/step   1.0 img/s   peak 9.03 GB
+python bench.py --cudnn_benchmark  8.23 s/step   1.0 img/s   peak 9.03 GB
+
+Without checkpointing:            OOM at batch 8 (>20.4 GB allocated, 22 GiB card)
+Checkpoint per residual group:    OOM at batch 8 (20.6 GB allocated)
+Checkpoint per block:             9.0 GB (bench), 9.1 GB peak in training
+
+python bench.py --profile   (one training step, top 15 CUDA kernels by self time)
+Self CUDA time total: 8.245 s
+
+kernel                                              self CUDA    %      calls
+elementwise_kernel<128,4>                            642.2 ms   7.79%   1314
+vectorized_elementwise_kernel<4>                     526.0 ms   6.38%   3166
+RowwiseMoments (LayerNorm statistics)                517.5 ms   6.28%    290
+selective_scan_bwd_kernel                            387.6 ms   4.70%     36
+_scatter_gather_elementwise_kernel                   315.4 ms   3.83%    144
+vectorized_elementwise_kernel<4>                     278.3 ms   3.38%    546
+unrolled_elementwise_kernel                          267.2 ms   3.24%   1611
+conv_depthwise (fwd/bwd)                             257.4 ms   3.12%    144
+selective_scan_fwd_kernel                            241.5 ms   2.93%     72
+softmax_warp_forward                                 241.0 ms   2.92%     72
+vectorized_elementwise_kernel<4>                     239.1 ms   2.90%    180
+conv_depthwise (fwd/bwd)                             231.5 ms   2.81%    108
+elementwise_kernel<128,4>                            215.2 ms   2.61%    144
+softmax_warp_backward                                180.6 ms   2.19%     36
+elementwise_kernel<128,2>                            161.7 ms   1.96%    551
+
+Reading: no GEMM kernel in the top 15; time is spread across thousands of
+memory-bound elementwise / normalisation / gather kernels. selective scan
+(fwd+bwd) is ~7.6%, depthwise conv ~5.9%. cudnn.benchmark has no effect.
+
+Training logs (runs/lam*.log, step 1500 lines): 1.0 img/s, peak 9.12-9.14 GB.
+lam0 shows 0.8 img/s: evals and a hung smoke-run process shared the GPU during that run.

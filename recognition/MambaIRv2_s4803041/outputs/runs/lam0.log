@@ -1,0 +1,39 @@
+/home/s4803041/venv-mamba/lib/python3.12/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/s4803041/venv-mamba/lib/python3.12/site-packages/torch/functional.py:554: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /pytorch/aten/src/ATen/native/TensorShape.cpp:4322.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+<All keys matched successfully>
+VAL step 0  l1 0.0854  lpips 0.0000
+step 50  l1 0.0817  lpips 0.0000  1.0 img/s  peak 9.12 GB
+step 100  l1 0.0729  lpips 0.0000  1.0 img/s  peak 9.12 GB
+step 150  l1 0.0918  lpips 0.0000  1.0 img/s  peak 9.12 GB
+step 200  l1 0.0797  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 250  l1 0.0770  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 300  l1 0.0773  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 350  l1 0.0624  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 400  l1 0.0661  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 450  l1 0.0900  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 500  l1 0.0807  lpips 0.0000  0.9 img/s  peak 9.12 GB
+VAL step 500  l1 0.0809  lpips 0.0000
+step 550  l1 0.0469  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 600  l1 0.0597  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 650  l1 0.0892  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 700  l1 0.0306  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 750  l1 0.0878  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 800  l1 0.0632  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 850  l1 0.0750  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 900  l1 0.0764  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 950  l1 0.0810  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 1000  l1 0.0628  lpips 0.0000  0.9 img/s  peak 9.12 GB
+VAL step 1000  l1 0.0785  lpips 0.0000
+step 1050  l1 0.0655  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 1100  l1 0.0773  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 1150  l1 0.0555  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 1200  l1 0.0886  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 1250  l1 0.1277  lpips 0.0000  0.9 img/s  peak 9.12 GB
+step 1300  l1 0.0840  lpips 0.0000  0.8 img/s  peak 9.12 GB
+step 1350  l1 0.1252  lpips 0.0000  0.8 img/s  peak 9.12 GB
+step 1400  l1 0.0466  lpips 0.0000  0.8 img/s  peak 9.12 GB
+step 1450  l1 0.0522  lpips 0.0000  0.8 img/s  peak 9.12 GB
+step 1500  l1 0.0696  lpips 0.0000  0.8 img/s  peak 9.12 GB
+VAL step 1500  l1 0.0764  lpips 0.0000

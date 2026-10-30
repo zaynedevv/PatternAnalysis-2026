@@ -1,0 +1,45 @@
+/home/s4803041/venv-mamba/lib/python3.12/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/s4803041/venv-mamba/lib/python3.12/site-packages/torch/functional.py:554: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /pytorch/aten/src/ATen/native/TensorShape.cpp:4322.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+<All keys matched successfully>
+Setting up [LPIPS] perceptual loss: trunk [alex], v[0.1], spatial [off]
+/home/s4803041/venv-mamba/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/s4803041/venv-mamba/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Loading model from: /home/s4803041/venv-mamba/lib/python3.12/site-packages/lpips/weights/v0.1/alex.pth
+VAL step 0  l1 0.0854  lpips 0.2241
+step 50  l1 0.0690  lpips 0.1719  1.0 img/s  peak 9.12 GB
+step 100  l1 0.0612  lpips 0.1216  1.0 img/s  peak 9.12 GB
+step 150  l1 0.0986  lpips 0.2061  1.0 img/s  peak 9.12 GB
+step 200  l1 0.0645  lpips 0.1680  1.0 img/s  peak 9.12 GB
+step 250  l1 0.0779  lpips 0.1592  1.0 img/s  peak 9.12 GB
+step 300  l1 0.0839  lpips 0.2061  1.0 img/s  peak 9.12 GB
+step 350  l1 0.0612  lpips 0.1030  1.0 img/s  peak 9.12 GB
+step 400  l1 0.0393  lpips 0.1123  1.0 img/s  peak 9.12 GB
+step 450  l1 0.0661  lpips 0.1484  1.0 img/s  peak 9.12 GB
+step 500  l1 0.1030  lpips 0.2471  1.0 img/s  peak 9.12 GB
+VAL step 500  l1 0.0786  lpips 0.1748
+step 550  l1 0.0481  lpips 0.1216  1.0 img/s  peak 9.12 GB
+step 600  l1 0.0700  lpips 0.1709  1.0 img/s  peak 9.12 GB
+step 650  l1 0.0682  lpips 0.1572  1.0 img/s  peak 9.12 GB
+step 700  l1 0.0723  lpips 0.1367  1.0 img/s  peak 9.12 GB
+step 750  l1 0.0585  lpips 0.1357  1.0 img/s  peak 9.12 GB
+step 800  l1 0.0611  lpips 0.1709  1.0 img/s  peak 9.12 GB
+step 850  l1 0.0653  lpips 0.1816  1.0 img/s  peak 9.12 GB
+step 900  l1 0.0594  lpips 0.1895  1.0 img/s  peak 9.12 GB
+step 950  l1 0.0695  lpips 0.1807  1.0 img/s  peak 9.12 GB
+step 1000  l1 0.0618  lpips 0.1572  1.0 img/s  peak 9.12 GB
+VAL step 1000  l1 0.0765  lpips 0.1674
+step 1050  l1 0.0575  lpips 0.1631  1.0 img/s  peak 9.12 GB
+step 1100  l1 0.0574  lpips 0.1514  1.0 img/s  peak 9.12 GB
+step 1150  l1 0.0416  lpips 0.1138  1.0 img/s  peak 9.12 GB
+step 1200  l1 0.0691  lpips 0.1680  1.0 img/s  peak 9.12 GB
+step 1250  l1 0.1064  lpips 0.2500  1.0 img/s  peak 9.12 GB
+step 1300  l1 0.0941  lpips 0.2012  1.0 img/s  peak 9.12 GB
+step 1350  l1 0.1100  lpips 0.2578  1.0 img/s  peak 9.12 GB
+step 1400  l1 0.0830  lpips 0.1738  1.0 img/s  peak 9.12 GB
+step 1450  l1 0.0605  lpips 0.1729  1.0 img/s  peak 9.12 GB
+step 1500  l1 0.0660  lpips 0.1611  1.0 img/s  peak 9.12 GB
+VAL step 1500  l1 0.0757  lpips 0.1661

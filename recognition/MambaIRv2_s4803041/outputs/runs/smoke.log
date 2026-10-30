@@ -1,0 +1,15 @@
+/home/s4803041/venv-mamba/lib/python3.12/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/s4803041/venv-mamba/lib/python3.12/site-packages/torch/functional.py:554: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /pytorch/aten/src/ATen/native/TensorShape.cpp:4322.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+<All keys matched successfully>
+Setting up [LPIPS] perceptual loss: trunk [alex], v[0.1], spatial [off]
+/home/s4803041/venv-mamba/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/s4803041/venv-mamba/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Loading model from: /home/s4803041/venv-mamba/lib/python3.12/site-packages/lpips/weights/v0.1/alex.pth
+VAL step 0  l1 0.0854  lpips 0.2241
+step 50  l1 0.0717  lpips 0.1797  1.0 img/s  peak 9.12 GB
+step 100  l1 0.0602  lpips 0.1245  1.0 img/s  peak 9.12 GB
+VAL step 100  l1 0.0830  lpips 0.1902

@@ -1,0 +1,252 @@
+
+finetuned  ab_scale 1.0  (80 images)
+  psnr                 23.3142
+  ssim_rgb             0.9217
+  ssim_L               1.0000
+  lpips                0.1683
+  colourfulness_pred   18.0160
+  colourfulness_gt     43.6865
+  bleed_pred           0.0217
+  bleed_gt             0.0693
+  colourfulness ratio  0.412   (target 0.75-1.25)
+  bleed ratio          0.313   (target <= 1.20)
+
+finetuned  ab_scale 1.5  (80 images)
+  psnr                 22.5898
+  ssim_rgb             0.9131
+  ssim_L               1.0000
+  lpips                0.1754
+  colourfulness_pred   26.9693
+  colourfulness_gt     43.6865
+  bleed_pred           0.0326
+  bleed_gt             0.0693
+  colourfulness ratio  0.617   (target 0.75-1.25)
+  bleed ratio          0.470   (target <= 1.20)
+
+finetuned  ab_scale 2.0  (80 images)
+  psnr                 21.3262
+  ssim_rgb             0.8874
+  ssim_L               1.0000
+  lpips                0.1978
+  colourfulness_pred   36.8405
+  colourfulness_gt     43.6865
+  bleed_pred           0.0434
+  bleed_gt             0.0693
+  colourfulness ratio  0.843   (target 0.75-1.25)
+  bleed ratio          0.626   (target <= 1.20)
+
+finetuned  ab_scale 2.5  (80 images)
+  psnr                 20.1495
+  ssim_rgb             0.8600
+  ssim_L               1.0000
+  lpips                0.2189
+  colourfulness_pred   45.8096
+  colourfulness_gt     43.6865
+  bleed_pred           0.0542
+  bleed_gt             0.0693
+  colourfulness ratio  1.049   (target 0.75-1.25)
+  bleed ratio          0.782   (target <= 1.20)
+
+finetuned  ab_scale 1.0  (80 images)
+  psnr                 22.9299
+  ssim_rgb             0.9190
+  ssim_L               1.0000
+  lpips                0.1682
+  colourfulness_pred   19.2329
+  colourfulness_gt     43.6865
+  bleed_pred           0.0258
+  bleed_gt             0.0693
+  colourfulness ratio  0.440   (target 0.75-1.25)
+  bleed ratio          0.372   (target <= 1.20)
+
+finetuned  ab_scale 1.5  (80 images)
+  psnr                 22.3424
+  ssim_rgb             0.9094
+  ssim_L               1.0000
+  lpips                0.1784
+  colourfulness_pred   28.5597
+  colourfulness_gt     43.6865
+  bleed_pred           0.0387
+  bleed_gt             0.0693
+  colourfulness ratio  0.654   (target 0.75-1.25)
+  bleed ratio          0.559   (target <= 1.20)
+
+finetuned  ab_scale 2.0  (80 images)
+  psnr                 21.2207
+  ssim_rgb             0.8887
+  ssim_L               1.0000
+  lpips                0.2011
+  colourfulness_pred   38.3041
+  colourfulness_gt     43.6865
+  bleed_pred           0.0517
+  bleed_gt             0.0693
+  colourfulness ratio  0.877   (target 0.75-1.25)
+  bleed ratio          0.745   (target <= 1.20)
+
+finetuned  ab_scale 2.5  (80 images)
+  psnr                 19.9227
+  ssim_rgb             0.8585
+  ssim_L               1.0000
+  lpips                0.2284
+  colourfulness_pred   48.1747
+  colourfulness_gt     43.6865
+  bleed_pred           0.0645
+  bleed_gt             0.0693
+  colourfulness ratio  1.103   (target 0.75-1.25)
+  bleed ratio          0.931   (target <= 1.20)
+
+finetuned  ab_scale 1.0  (80 images)
+  psnr                 23.0778
+  ssim_rgb             0.9223
+  ssim_L               1.0000
+  lpips                0.1863
+  colourfulness_pred   15.5200
+  colourfulness_gt     43.6865
+  bleed_pred           0.0142
+  bleed_gt             0.0693
+  colourfulness ratio  0.355   (target 0.75-1.25)
+  bleed ratio          0.204   (target <= 1.20)
+
+finetuned  ab_scale 1.5  (80 images)
+  psnr                 22.5478
+  ssim_rgb             0.9173
+  ssim_L               1.0000
+  lpips                0.1874
+  colourfulness_pred   23.2693
+  colourfulness_gt     43.6865
+  bleed_pred           0.0212
+  bleed_gt             0.0693
+  colourfulness ratio  0.533   (target 0.75-1.25)
+  bleed ratio          0.306   (target <= 1.20)
+
+finetuned  ab_scale 2.0  (80 images)
+  psnr                 21.5834
+  ssim_rgb             0.8998
+  ssim_L               1.0000
+  lpips                0.2001
+  colourfulness_pred   31.7638
+  colourfulness_gt     43.6865
+  bleed_pred           0.0283
+  bleed_gt             0.0693
+  colourfulness ratio  0.727   (target 0.75-1.25)
+  bleed ratio          0.409   (target <= 1.20)
+
+finetuned  ab_scale 2.5  (80 images)
+  psnr                 20.5747
+  ssim_rgb             0.8767
+  ssim_L               1.0000
+  lpips                0.2160
+  colourfulness_pred   39.8449
+  colourfulness_gt     43.6865
+  bleed_pred           0.0354
+  bleed_gt             0.0693
+  colourfulness ratio  0.912   (target 0.75-1.25)
+  bleed ratio          0.511   (target <= 1.20)
+
+finetuned  ab_scale 1.0  (80 images)
+  psnr                 23.0761
+  ssim_rgb             0.9223
+  ssim_L               1.0000
+  lpips                0.1863
+  colourfulness_pred   15.5179
+  colourfulness_gt     43.6865
+  bleed_pred           0.0142
+  bleed_gt             0.0693
+  colourfulness ratio  0.355   (target 0.75-1.25)
+  bleed ratio          0.204   (target <= 1.20)
+
+finetuned  ab_scale 1.0  (80 images)
+  psnr                 23.0765
+  ssim_rgb             0.9223
+  ssim_L               1.0000
+  lpips                0.1863
+  colourfulness_pred   15.5190
+  colourfulness_gt     43.6865
+  bleed_pred           0.0142
+  bleed_gt             0.0693
+  colourfulness ratio  0.355   (target 0.75-1.25)
+  bleed ratio          0.204   (target <= 1.20)
+
+finetuned  ab_scale 1.5  (80 images)
+  psnr                 22.5479
+  ssim_rgb             0.9173
+  ssim_L               1.0000
+  lpips                0.1874
+  colourfulness_pred   23.2689
+  colourfulness_gt     43.6865
+  bleed_pred           0.0212
+  bleed_gt             0.0693
+  colourfulness ratio  0.533   (target 0.75-1.25)
+  bleed ratio          0.306   (target <= 1.20)
+
+finetuned  ab_scale 2.0  (80 images)
+  psnr                 21.5809
+  ssim_rgb             0.8998
+  ssim_L               1.0000
+  lpips                0.2001
+  colourfulness_pred   31.7748
+  colourfulness_gt     43.6865
+  bleed_pred           0.0283
+  bleed_gt             0.0693
+  colourfulness ratio  0.727   (target 0.75-1.25)
+  bleed ratio          0.409   (target <= 1.20)
+
+finetuned  ab_scale 2.5  (80 images)
+  psnr                 20.5773
+  ssim_rgb             0.8767
+  ssim_L               1.0000
+  lpips                0.2159
+  colourfulness_pred   39.8379
+  colourfulness_gt     43.6865
+  bleed_pred           0.0354
+  bleed_gt             0.0693
+  colourfulness ratio  0.912   (target 0.75-1.25)
+  bleed ratio          0.511   (target <= 1.20)
+
+finetuned  ab_scale 1.0  (80 images)
+  psnr                 23.0246
+  ssim_rgb             0.9183
+  ssim_L               1.0000
+  lpips                0.1684
+  colourfulness_pred   19.7529
+  colourfulness_gt     43.6865
+  bleed_pred           0.0271
+  bleed_gt             0.0693
+  colourfulness ratio  0.452   (target 0.75-1.25)
+  bleed ratio          0.391   (target <= 1.20)
+
+finetuned  ab_scale 1.5  (80 images)
+  psnr                 22.1875
+  ssim_rgb             0.9067
+  ssim_L               1.0000
+  lpips                0.1817
+  colourfulness_pred   29.4915
+  colourfulness_gt     43.6865
+  bleed_pred           0.0407
+  bleed_gt             0.0693
+  colourfulness ratio  0.675   (target 0.75-1.25)
+  bleed ratio          0.586   (target <= 1.20)
+
+finetuned  ab_scale 2.0  (80 images)
+  psnr                 20.8461
+  ssim_rgb             0.8813
+  ssim_L               1.0000
+  lpips                0.2089
+  colourfulness_pred   39.7102
+  colourfulness_gt     43.6865
+  bleed_pred           0.0542
+  bleed_gt             0.0693
+  colourfulness ratio  0.909   (target 0.75-1.25)
+  bleed ratio          0.782   (target <= 1.20)
+
+finetuned  ab_scale 2.5  (80 images)
+  psnr                 19.5429
+  ssim_rgb             0.8483
+  ssim_L               1.0000
+  lpips                0.2352
+  colourfulness_pred   49.6480
+  colourfulness_gt     43.6865
+  bleed_pred           0.0677
+  bleed_gt             0.0693
+  colourfulness ratio  1.136   (target 0.75-1.25)
+  bleed ratio          0.977   (target <= 1.20)

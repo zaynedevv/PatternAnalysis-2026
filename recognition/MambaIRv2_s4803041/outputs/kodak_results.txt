@@ -1,0 +1,72 @@
+
+finetuned  ab_scale 1.0  (24 images)
+  psnr                 23.1928
+  ssim_rgb             0.9388
+  ssim_L               1.0000
+  lpips                0.2027
+  colourfulness_pred   10.9960
+  colourfulness_gt     43.0800
+  bleed_pred           0.0112
+  bleed_gt             0.0552
+  colourfulness ratio  0.255   (target 0.75-1.25)
+  bleed ratio          0.203   (target <= 1.20)
+
+finetuned  ab_scale 1.0  (24 images)
+  psnr                 23.1936
+  ssim_rgb             0.9387
+  ssim_L               1.0000
+  lpips                0.2027
+  colourfulness_pred   11.0043
+  colourfulness_gt     43.0800
+  bleed_pred           0.0112
+  bleed_gt             0.0552
+  colourfulness ratio  0.255   (target 0.75-1.25)
+  bleed ratio          0.203   (target <= 1.20)
+
+finetuned  ab_scale 1.0  (24 images)
+  psnr                 23.2352
+  ssim_rgb             0.9347
+  ssim_L               1.0000
+  lpips                0.1805
+  colourfulness_pred   17.5772
+  colourfulness_gt     43.0800
+  bleed_pred           0.0271
+  bleed_gt             0.0552
+  colourfulness ratio  0.408   (target 0.75-1.25)
+  bleed ratio          0.491   (target <= 1.20)
+
+meanmap  ab_scale 1.0  (24 images)
+  psnr                 23.2900
+  ssim_rgb             0.9394
+  ssim_L               1.0000
+  lpips                0.2009
+  colourfulness_pred   16.5325
+  colourfulness_gt     43.0800
+  bleed_pred           0.0416
+  bleed_gt             0.0552
+  colourfulness ratio  0.384   (target 0.75-1.25)
+  bleed ratio          0.753   (target <= 1.20)
+
+finetuned  ab_scale 2.0  (24 images)
+  psnr                 22.5372
+  ssim_rgb             0.9241
+  ssim_L               1.0000
+  lpips                0.2004
+  colourfulness_pred   27.6100
+  colourfulness_gt     43.0800
+  bleed_pred           0.0403
+  bleed_gt             0.0552
+  colourfulness ratio  0.641   (target 0.75-1.25)
+  bleed ratio          0.730   (target <= 1.20)
+
+meanmap  ab_scale 2.0  (24 images)
+  psnr                 21.5694
+  ssim_rgb             0.9248
+  ssim_L               1.0000
+  lpips                0.2203
+  colourfulness_pred   31.5480
+  colourfulness_gt     43.0800
+  bleed_pred           0.0831
+  bleed_gt             0.0552
+  colourfulness ratio  0.732   (target 0.75-1.25)
+  bleed ratio          1.505   (target <= 1.20)
